@@ -1,0 +1,10 @@
+<div>
+  <h1>Select File to Upload</h1>
+  <input type="file" #file (change)="onFilesAdded()" />
+</div>
+
+<div>
+  <a routerLink="/edit">Edit File</a>
+</div>
+
+<router-outlet></router-outlet>
