@@ -6,4 +6,13 @@
     <button (click)="downloadFile(fileNameToDownload)">Download</button>
 </div>
 
-<textarea id="" cols="30" rows="10" [(ngModel)]="fileContent">sdsd</textarea>
+<div>
+    <label>Enter Txt File Name to download</label>
+    <input type="text" [(ngModel)]="textFileNameToDownload">
+    <button (click)="downloadTextFile(textFileNameToDownload)">Download</button>
+</div>
+
+<textarea id="" cols="30" rows="10" [(ngModel)]="editFileContent">sdsd</textarea>
+<div>
+    <button (click)="saveFile(textFileNameToDownload, editFileContent)">Save</button>
+</div>

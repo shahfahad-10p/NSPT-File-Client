@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs';
-import saveAs from 'file-saver';
+import { servers, endpoints } from './common/constants';
 
 @Component({
   selector: 'app-root',
@@ -16,32 +16,26 @@ export class AppComponent {
     private http: HttpClient
   ) { }
 
-  fileNameToDownload: string = '';
-  @ViewChild('file') file;
-  public files: Set<File> = new Set();
+  handleFileInput(file) {
+    let selectedFile: File = file[0];
+    let fr = new FileReader();
 
-  onFilesAdded() {
-    const files: { [key: string]: File } = this.file.nativeElement.files;
-    for (let key in files) {
-      if (!isNaN(parseInt(key))) {
-        console.log("FILE : ", files[key]);
-        this.files.add(files[key]);
+    fr.onloadend = (e) => {
+      let fileToSend = fr.result;
 
-        const formData: FormData = new FormData();
-        formData.append('file', files[key], files[key].name);
-
-        const url = "http://localhost:3000/file/upload"
-        const req = new HttpRequest('POST', url, formData, {
-          reportProgress: true
-        });
-
-        this.http.request(req)
-          .subscribe(res => {
-            console.log("FILE ADD RESPONSE");
-          });
+      let payload = {
+        fileName: selectedFile.name,
+        fileType: selectedFile.type,
+        base64: fileToSend
       }
+
+      this.http.post(`${servers.nameServerUrl}${endpoints.upload}`, payload)
+        .subscribe(res => {
+          console.log(res);
+        });
     }
+
+    fr.readAsDataURL(selectedFile);
   }
 
-  title = 'client';
 }
